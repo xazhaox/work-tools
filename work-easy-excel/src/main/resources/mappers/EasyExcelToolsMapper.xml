@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- 绑定namespace -->
+<mapper namespace="com.xazhao.excel.mapper.EasyExcelToolsMapper">
+
+    <resultMap type="com.xazhao.excel.entity.EasyExcelTools" id="EasyExcelToolsMap">
+        <result property="id" column="id"/>
+        <result property="name" column="name"/>
+        <result property="address" column="address"/>
+        <result property="age" column="age"/>
+        <result property="url" column="url"/>
+        <result property="gmtCreate" column="gmt_create"/>
+        <result property="gmtModified" column="gmt_modified"/>
+    </resultMap>
+
+    <select id="grossAmountQuery" resultType="java.lang.Long">
+        select count(1) from easy_excel_tools
+    </select>
+
+    <select id="selectExcel" resultMap="EasyExcelToolsMap">
+        select id, name, address, age, url, gmt_create, gmt_modified from easy_excel_tools
+    </select>
+
+    <select id="pageHelperQueryExcel" resultMap="EasyExcelToolsMap">
+        select id, name, address, age, url, gmt_create, gmt_modified from easy_excel_tools order by id asc
+    </select>
+</mapper>
+
