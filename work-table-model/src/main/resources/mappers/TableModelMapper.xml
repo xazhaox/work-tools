@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+    <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- 绑定namespace -->
+<mapper namespace="com.xazhao.table.mapper.TableModelMapper">
+
+    <select id="executeStoredProcedure" resultType="java.util.Map" databaseId="mysql">
+        CALL custom_select_table_model(#{tableUniqueIdentification}, #{databaseName}, #{targetTableName});
+    </select>
+
+    <insert id="insertTableModel" parameterType="java.util.List" databaseId="mysql">
+        insert into table_model (
+            table_unique_identification, column_name, column_comment, data_type, character_maximum_length,
+            column_comment_description, caliber_specification, column_key
+        ) values
+        <foreach collection="list" item="item" separator=",">
+            <trim prefix="(" suffix=")" suffixOverrides=",">
+                #{item.tableUniqueIdentification,jdbcType=NULL},
+                #{item.columnName,jdbcType=NULL},
+                #{item.columnComment,jdbcType=NULL},
+                #{item.dataType,jdbcType=NULL},
+                #{item.characterMaximumLength,jdbcType=NULL},
+                #{item.columnCommentDescription,jdbcType=NULL},
+                #{item.caliberSpecification,jdbcType=NULL},
+                #{item.columnKey,jdbcType=NULL},
+            </trim>
+        </foreach>
+    </insert>
+
+    <delete id="clearTableModel" databaseId="mysql">
+        delete from table_model
+    </delete>
+
+</mapper>
+

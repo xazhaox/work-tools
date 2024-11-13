@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- 绑定namespace -->
+<mapper namespace="com.xazhao.table.mapper.TableIfExistsMapper">
+
+    <select id="queryTableIfExists" resultType="com.xazhao.table.entity.TableIfExists" databaseId="mysql">
+        CALL table_if_exists(#{databaseName}, #{tableName});
+    </select>
+
+    <insert id="insertTableIfExists" parameterType="java.util.List" databaseId="mysql">
+        insert into table_if_exists (
+            table_name, table_status, table_type
+        ) values
+        <foreach collection="list" item="item" separator=",">
+            <trim prefix="(" suffix=")" suffixOverrides=",">
+                #{item.tableName,jdbcType=NULL},
+                #{item.tableStatus,jdbcType=NULL},
+                #{item.tableType,jdbcType=NULL},
+            </trim>
+        </foreach>
+    </insert>
+
+    <delete id="clearTableIfExists" databaseId="mysql">
+        delete from table_if_exists
+    </delete>
+
+</mapper>
