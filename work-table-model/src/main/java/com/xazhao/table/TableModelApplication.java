@@ -13,11 +13,11 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @Slf4j
 @MapperScan(basePackages = "com.xazhao.**.mapper")
 @SpringBootApplication
-public class WorkTableModelApplication {
+public class TableModelApplication {
 
     public static void main(String[] args) {
 
-        SpringApplication.run(WorkTableModelApplication.class, args);
+        SpringApplication.run(TableModelApplication.class, args);
         log.info("(♥◠‿◠)ﾉﾞ  work-table-model启动成功...   ლ(´ڡ`ლ)ﾞ");
     }
 }
