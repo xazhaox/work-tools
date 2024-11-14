@@ -17,6 +17,7 @@
         <module>work-concurrent-program</module>
         <module>work-table-model</module>
         <module>work-easy-excel</module>
+        <module>work-bloom-filter</module>
     </modules>
 
     <properties>
