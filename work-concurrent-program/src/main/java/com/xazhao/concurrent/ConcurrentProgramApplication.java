@@ -13,11 +13,11 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @Slf4j
 @MapperScan(basePackages = "com.xazhao.**.mapper")
 @SpringBootApplication
-public class WorkConcurrentProgramApplication {
+public class ConcurrentProgramApplication {
 
     public static void main(String[] args) {
 
-        SpringApplication.run(WorkConcurrentProgramApplication.class, args);
+        SpringApplication.run(ConcurrentProgramApplication.class, args);
         log.info("(♥◠‿◠)ﾉﾞ  work-concurrent-program启动成功...   ლ(´ڡ`ლ)ﾞ");
     }
 }
