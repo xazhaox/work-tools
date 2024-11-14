@@ -116,7 +116,7 @@ public class EasyExcelToolsServiceImpl implements EasyExcelToolsService {
         Instant startTime = Instant.now();
 
         try {
-            // 导入Excel
+            // 导出Excel
             this.concurrentQuerySplitSheetWrite(response);
 
         } catch (IOException e) {

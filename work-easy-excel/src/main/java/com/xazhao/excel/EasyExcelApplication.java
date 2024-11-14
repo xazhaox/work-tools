@@ -13,11 +13,11 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @Slf4j
 @MapperScan(basePackages = "com.xazhao.**.mapper")
 @SpringBootApplication
-public class WorkEasyExcelApplication {
+public class EasyExcelApplication {
 
     public static void main(String[] args) {
 
-        SpringApplication.run(WorkEasyExcelApplication.class, args);
+        SpringApplication.run(EasyExcelApplication.class, args);
         log.info("(♥◠‿◠)ﾉﾞ  work-easy-excel启动成功...   ლ(´ڡ`ლ)ﾞ");
     }
 }
