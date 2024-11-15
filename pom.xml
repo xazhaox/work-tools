@@ -18,6 +18,7 @@
         <module>work-table-model</module>
         <module>work-easy-excel</module>
         <module>work-bloom-filter</module>
+        <module>work-ai</module>
     </modules>
 
     <properties>
