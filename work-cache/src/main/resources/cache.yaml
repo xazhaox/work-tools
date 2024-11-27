@@ -1,0 +1,45 @@
+# redis配置
+spring:
+  data:
+    redis:
+      host: 127.0.0.1
+      password: Xa.Redis_27
+      port: 6379
+      # 连接超时时间，单位毫秒，默认为0
+      timeout: 18000
+      # 指定数据库，默认为0
+      database: 0
+      lettuce:
+        # 连接池配置
+        pool:
+          # 最大空闲连接数，默认8
+          max-idle: 32
+          # 最小空闲连接数，默认8
+          min-idle: 8
+          # 连接池最大连接数，负数表示无最大连接数，默认8
+          max-active: 128
+          # 连接池获取连接最大阻塞等待时间，默认-1表示无限制，单位毫秒
+          max-wait: 3000
+      # 是否启用SSL连接，默认false
+      ssl:
+        enabled: false
+
+  # MySQL数据源配置
+  datasource:
+    name: mysql
+    type: com.alibaba.druid.pool.DruidDataSource
+    druid:
+      url: jdbc:mysql://127.0.0.1:3306/work-tools?useUnicode=true&characterEncoding=UTF-8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8&allowMultiQueries=true&autoReconnect=true&keepAlive=true&autoReconnectForPools=true&connectTimeout=30000&socketTimeout=60000&nullCatalogMeansCurrent=true
+      username: root
+      password: xaroot
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      initial-size: 20
+      min-idle: 20
+      max-active: 100
+      max-wait: 60000
+      time-between-eviction-runs-millis: 60000
+      min-evictable-idle-time-millis: 300000
+      validation-query: SELECT 1 FROM DUAL
+      test-while-idle: true
+      test-on-borrow: false
+      test-on-return: false
