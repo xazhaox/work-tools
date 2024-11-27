@@ -25,5 +25,9 @@
     <select id="pageHelperQueryExcel" resultMap="EasyExcelToolsMap">
         select id, name, address, age, url, gmt_create, gmt_modified from easy_excel_tools order by id asc
     </select>
+
+    <select id="pageMapQuery" resultType="java.util.Map">
+        select ID, NAME, ADDRESS, AGE, URL, GMT_CREATE, GMT_MODIFIED from easy_excel_tools limit 10
+    </select>
 </mapper>
 

@@ -6,6 +6,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -74,4 +75,11 @@ public interface EasyExcelToolsService {
      * @return 数据集
      */
     List<EasyExcelTools> completeQuery();
+
+    /**
+     * 测试Mybatis Map返回的Key是否转为小写
+     *
+     * @return Map
+     */
+    List<Map<String, Object>> pageMapQuery();
 }

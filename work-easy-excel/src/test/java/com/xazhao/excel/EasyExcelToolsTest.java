@@ -69,6 +69,12 @@ public class EasyExcelToolsTest {
     }
 
     @Test
+    public void getExcalMapTest() {
+
+        easyExcelToolsService.pageMapQuery();
+    }
+
+    @Test
     public void completeQueryTest() {
 
         easyExcelToolsService.completeQuery();

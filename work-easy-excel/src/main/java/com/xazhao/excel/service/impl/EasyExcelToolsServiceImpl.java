@@ -28,6 +28,7 @@ import java.time.Instant;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -234,6 +235,17 @@ public class EasyExcelToolsServiceImpl implements EasyExcelToolsService {
         List<EasyExcelTools> easyExcelTools = easyExcelToolsMapper.selectExcel();
         log.info("全查询耗时：{} ms", Duration.between(startTime, Instant.now()).toMillis());
         return easyExcelTools;
+    }
+
+    /**
+     * 测试Mybatis Map返回的Key是否转为小写
+     *
+     * @return Map
+     */
+    @Override
+    public List<Map<String, Object>> pageMapQuery() {
+
+        return easyExcelToolsMapper.pageMapQuery();
     }
 
     /**
