@@ -33,6 +33,8 @@ import java.nio.charset.StandardCharsets;
 import java.security.KeyManagementException;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.Map;
@@ -50,6 +52,9 @@ public class HttpClientUtils {
     private static final String APPLICATION_JSON_CHARSET = "application/json; charset=utf-8";
 
     private static final String APPLICATION_JSON = "application/json";
+
+    private static final ThreadLocal<DateFormat> DATE_FORMAT = ThreadLocal.withInitial(()
+            -> new SimpleDateFormat(DatePattern.NORM_DATETIME_PATTERN));
 
     /**
      * 获取HttpClient客户端
@@ -188,6 +193,7 @@ public class HttpClientUtils {
         String uploadFileName = uploadTime + "-" + IdUtil.fastSimpleUUID() + "." + fileSuffix;
         File reportsFile = createFile(profileUrl + File.separator + uploadFileName);
         multipartFile.transferTo(reportsFile);
+        log.warn("上传时间：{}", DATE_FORMAT.get().format(new Date()));
         return reportsFile;
     }
 
