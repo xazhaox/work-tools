@@ -15,12 +15,12 @@ public interface ThreadPoolParameter {
     /**
      * 核心线程池大小
      */
-    Integer CORE_POOL_SIZE = (int) (CPU_COUNT / (1 - 0.2));
+    Integer CORE_POOL_SIZE = Math.max(2, Math.min(CPU_COUNT - 1, 4));
 
     /**
      * 最大可创建的线程数
      */
-    Integer MAX_POOL_SIZE = (int) (CPU_COUNT / (1 - 0.5));
+    Integer MAX_POOL_SIZE = CPU_COUNT * 2 + 1;
 
     /**
      * 队列最大长度
