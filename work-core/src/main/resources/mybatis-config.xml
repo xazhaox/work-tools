@@ -16,4 +16,7 @@
         <setting name="mapUnderscoreToCamelCase" value="true"/>
     </settings>
 
+    <!-- 将返回map的key全部变成小写 -->
+    <objectWrapperFactory type="com.xazhao.core.config.MapWrapperFactory"/>
+
 </configuration>
