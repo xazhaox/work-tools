@@ -19,6 +19,7 @@
         <module>work-easy-excel</module>
         <module>work-bloom-filter</module>
         <module>work-ai</module>
+        <module>work-cache</module>
     </modules>
 
     <properties>
