@@ -18,8 +18,16 @@ public class CustomMapWrapper extends MapWrapper {
         super(metaObject, map);
     }
 
+    /**
+     * 这里将Map的Key改为小写，可扩展大写、驼峰等
+     *
+     * @param name                Key
+     * @param useCamelCaseMapping 使用驼峰映射
+     * @return Key
+     */
     @Override
     public String findProperty(String name, boolean useCamelCaseMapping) {
+
         // 返回字段转小写
         return name == null ? "" : name.toLowerCase();
     }
