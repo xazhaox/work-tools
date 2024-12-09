@@ -2,3 +2,4 @@ com.xazhao.cache.config.RedisSerializerConfiguration
 com.xazhao.cache.config.RedisCacheConfiguration
 com.xazhao.cache.config.CacheConfiguration
 com.xazhao.cache.lock.RedissonConfiguration
+com.xazhao.cache.config.DistributeLockConfiguration
