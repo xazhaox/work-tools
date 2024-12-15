@@ -81,5 +81,5 @@ public interface EasyExcelToolsService {
      *
      * @return Map
      */
-    List<Map<String, Object>> pageMapQuery();
+    List<EasyExcelTools> pageMapQuery();
 }

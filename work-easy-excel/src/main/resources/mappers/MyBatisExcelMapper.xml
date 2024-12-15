@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <!-- 绑定namespace -->
-<mapper namespace="com.xazhao.excel.mapper.EasyExcelToolsMapper">
+<mapper namespace="com.xazhao.excel.mapper.MyBatisExcelMapper">
 
     <resultMap type="com.xazhao.excel.entity.EasyExcelTools" id="EasyExcelToolsMap">
         <result property="id" column="id"/>
@@ -14,20 +14,23 @@
         <result property="gmtModified" column="gmt_modified"/>
     </resultMap>
 
-    <select id="grossAmountQuery" resultType="java.lang.Long">
-        select count(1) from easy_excel_tools
-    </select>
-
-    <select id="selectExcel" resultMap="EasyExcelToolsMap">
+    <select id="pageQuery" resultMap="EasyExcelToolsMap" parameterType="com.xazhao.excel.entity.MyBatisExcel">
         select id, name, address, age, url, gmt_create, gmt_modified from easy_excel_tools
+        <where>
+            <if test="url != null and url != ''">
+                and url = #{url}
+            </if>
+            <if test="batisExcel.name != null and batisExcel.name != ''">
+                and name = #{batisExcel.name}
+            </if>
+            <if test="batisExcel.ages != null and batisExcel.ages.size() > 0 ">
+                and age in
+                <foreach collection="batisExcel.ages" open="(" close=")" item="item" separator=",">
+                    ${item}
+                </foreach>
+            </if>
+        </where>
     </select>
 
-    <select id="pageHelperQueryExcel" resultMap="EasyExcelToolsMap">
-        select id, name, address, age, url, gmt_create, gmt_modified from easy_excel_tools order by id asc
-    </select>
-
-    <select id="pageMapQuery" resultMap="EasyExcelToolsMap">
-        select ID, NAME, ADDRESS, AGE, URL, GMT_CREATE, GMT_MODIFIED from easy_excel_tools limit 20
-    </select>
 </mapper>
 

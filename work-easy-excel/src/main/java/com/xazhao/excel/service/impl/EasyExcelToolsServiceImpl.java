@@ -6,12 +6,13 @@ import com.alibaba.excel.support.ExcelTypeEnum;
 import com.alibaba.excel.write.metadata.WriteSheet;
 import com.github.pagehelper.PageHelper;
 import com.xazhao.core.constant.Charsets;
-import com.xazhao.core.exception.ServiceErrorCode;
-import com.xazhao.core.exception.ServiceException;
+import com.xazhao.core.exception.BusinessException;
+import com.xazhao.core.exception.BusinessErrorCode;
 import com.xazhao.excel.entity.EasyExcelTools;
 import com.xazhao.excel.entity.ExportExcelTools;
 import com.xazhao.excel.interceptor.CustomCellWriteHandler;
 import com.xazhao.excel.interceptor.CustomSheetHandler;
+import com.xazhao.excel.interceptor.CustomWaterMarkHandler;
 import com.xazhao.excel.mapper.EasyExcelToolsMapper;
 import com.xazhao.excel.service.EasyExcelToolsService;
 import jakarta.annotation.Resource;
@@ -30,7 +31,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.*;
-import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * @Description Created on 2024/11/07.
@@ -99,7 +99,7 @@ public class EasyExcelToolsServiceImpl implements EasyExcelToolsService {
             } catch (InterruptedException | ExecutionException | TimeoutException e) {
 
                 log.info("Get CompletableFuture result failed. ");
-                throw new ServiceException(ServiceErrorCode.GET_COMPLETABLE_FUTURE_RESULT_FAILED);
+                throw new BusinessException(BusinessErrorCode.GET_COMPLETABLE_FUTURE_RESULT_FAILED);
             }
         }
 
@@ -118,11 +118,11 @@ public class EasyExcelToolsServiceImpl implements EasyExcelToolsService {
 
         try {
             // 导出Excel
-            this.concurrentQuerySplitSheetWrite(response);
+            this.onceQueryWriteOnce(response);
 
         } catch (IOException e) {
             e.printStackTrace();
-            throw new ServiceException(ServiceErrorCode.EXCEL_EXPORT_FAILED);
+            throw new BusinessException(BusinessErrorCode.EXCEL_EXPORT_FAILED);
         }
 
         log.info("EasyExcelTools结果数据导出Excel耗时：{} ms", Duration.between(startTime, Instant.now()).toMillis());
@@ -186,7 +186,7 @@ public class EasyExcelToolsServiceImpl implements EasyExcelToolsService {
     @Override
     public void onceQueryWriteOnce(HttpServletResponse response) throws IOException {
 
-        List<EasyExcelTools> easyExcelTools = this.completeQuery();
+        List<EasyExcelTools> easyExcelTools = this.pageMapQuery();
 
         // 创建Excel，格式为xlsx
         ExcelWriter excelWriter = EasyExcelFactory.write(response.getOutputStream(), ExportExcelTools.class)
@@ -194,6 +194,8 @@ public class EasyExcelToolsServiceImpl implements EasyExcelToolsService {
 
         // 创建Sheet
         WriteSheet writeSheet = EasyExcelFactory.writerSheet(1, "一次查询_写入一个Sheet")
+                // 水印
+                .registerWriteHandler(new CustomWaterMarkHandler())
                 // 使用自定义EasyExcel策略
                 .registerWriteHandler(CustomCellWriteHandler.setEasyExcelStyle())
                 .registerWriteHandler(new CustomCellWriteHandler())
@@ -243,7 +245,7 @@ public class EasyExcelToolsServiceImpl implements EasyExcelToolsService {
      * @return Map
      */
     @Override
-    public List<Map<String, Object>> pageMapQuery() {
+    public List<EasyExcelTools> pageMapQuery() {
 
         return easyExcelToolsMapper.pageMapQuery();
     }

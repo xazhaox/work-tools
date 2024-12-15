@@ -42,6 +42,6 @@ public interface EasyExcelToolsMapper {
      * @return Map
      */
     @SuppressWarnings("MybatisXMapperMethodInspection")
-    List<Map<String, Object>> pageMapQuery();
+    List<EasyExcelTools> pageMapQuery();
 }
 
