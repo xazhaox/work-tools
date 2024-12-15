@@ -1,8 +1,8 @@
 package com.xazhao.core.context;
 
 import cn.hutool.core.lang.TypeReference;
-import com.xazhao.core.exception.ServiceErrorCode;
-import com.xazhao.core.exception.ServiceException;
+import com.xazhao.core.exception.BusinessErrorCode;
+import com.xazhao.core.exception.BusinessException;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.ListableBeanFactory;
 import org.springframework.beans.factory.config.BeanFactoryPostProcessor;
@@ -74,7 +74,7 @@ public class SpringApplicationContext implements BeanFactoryPostProcessor, Appli
     public static ListableBeanFactory getBeanFactory() {
         final ListableBeanFactory factory = null == beanFactory ? applicationContext : beanFactory;
         if (null == factory) {
-            throw new ServiceException("No ConfigurableListableBeanFactory or ApplicationContext injected, maybe not in the Spring environment?", ServiceErrorCode.APPLICATION_CONTEXT_ERROR);
+            throw new BusinessException("No ConfigurableListableBeanFactory or ApplicationContext injected, maybe not in the Spring environment?", BusinessErrorCode.APPLICATION_CONTEXT_ERROR);
         }
         return factory;
     }
@@ -83,16 +83,16 @@ public class SpringApplicationContext implements BeanFactoryPostProcessor, Appli
      * 获取{@link ConfigurableListableBeanFactory}
      *
      * @return {@link ConfigurableListableBeanFactory}
-     * @throws ServiceException 当上下文非ConfigurableListableBeanFactory抛出异常
+     * @throws BusinessException 当上下文非ConfigurableListableBeanFactory抛出异常
      */
-    public static ConfigurableListableBeanFactory getConfigurableBeanFactory() throws ServiceException {
+    public static ConfigurableListableBeanFactory getConfigurableBeanFactory() throws BusinessException {
         final ConfigurableListableBeanFactory factory;
         if (null != beanFactory) {
             factory = beanFactory;
         } else if (applicationContext instanceof ConfigurableApplicationContext) {
             factory = ((ConfigurableApplicationContext) applicationContext).getBeanFactory();
         } else {
-            throw new ServiceException("No ConfigurableListableBeanFactory from context!", ServiceErrorCode.APPLICATION_CONTEXT_ERROR);
+            throw new BusinessException("No ConfigurableListableBeanFactory from context!", BusinessErrorCode.APPLICATION_CONTEXT_ERROR);
         }
         return factory;
     }
@@ -276,7 +276,7 @@ public class SpringApplicationContext implements BeanFactoryPostProcessor, Appli
             DefaultSingletonBeanRegistry registry = (DefaultSingletonBeanRegistry) factory;
             registry.destroySingleton(beanName);
         } else {
-            throw new ServiceException("Can not unregister bean, the factory is not a DefaultSingletonBeanRegistry!", ServiceErrorCode.APPLICATION_CONTEXT_ERROR);
+            throw new BusinessException("Can not unregister bean, the factory is not a DefaultSingletonBeanRegistry!", BusinessErrorCode.APPLICATION_CONTEXT_ERROR);
         }
     }
 

@@ -1,0 +1,23 @@
+dubbo:
+  consumer:
+    # 默认超时时长
+    timeout: 3000
+    # dubbo默认会在启动的时候检查依赖的服务是否可用，不可用时会抛出异常，为了避免检查这里设置为false
+    check: false
+  protocol:
+    name: dubbo
+    port: -1
+  registry:
+    # dubbo注册中心的地址
+    address: nacos://127.0.0.1:8848
+    username: nacos
+    password: Nacos.work_99
+    # 表示注册中心需要的一些特殊配置，这里针对nacos的namespace和group做了定制。主要是为了隔离，默认的namespace中包含了服务、元数据、以及配置信息，会导致dubbo调用的时候出现误调用，出现失败的情况
+    parameters:
+      namespace: DUBBO-REGISTRY
+      group: DUBBO
+  application:
+    # 指定应用名
+    name: ${spring.application.name}
+    qos-enable: true
+    qos-accept-foreign-ip: false

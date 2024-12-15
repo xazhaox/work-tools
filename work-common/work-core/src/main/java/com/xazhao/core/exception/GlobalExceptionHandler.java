@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 /**
  * <h3>自定义全局异常</h3>
  * <ol>
- *     <li>ServiceException 业务异常</li>
+ *     <li>BusinessException 业务异常</li>
  *     <li>SystemException 系统异常</li>
  * </ol>
  *
@@ -42,13 +42,13 @@ public class GlobalExceptionHandler {
     /**
      * 业务异常
      *
-     * @param ex  ServiceException
+     * @param ex  BusinessException
      * @param <T> 返回类型
      * @return InvokeResult
      */
     @ResponseBody
-    @ExceptionHandler(value = {ServiceException.class})
-    public <T> InvokeResult<T> serviceExceptions(ServiceException ex) {
+    @ExceptionHandler(value = {BusinessException.class})
+    public <T> InvokeResult<T> serviceExceptions(BusinessException ex) {
 
         return InvokeResult.failure(ex.getMessage());
     }

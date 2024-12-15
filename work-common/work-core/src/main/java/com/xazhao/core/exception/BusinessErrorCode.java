@@ -10,7 +10,7 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public enum ServiceErrorCode implements ErrorCode {
+public enum BusinessErrorCode implements ErrorCode {
 
     /**
      * ApplicationContext 初始化错误
@@ -70,7 +70,17 @@ public enum ServiceErrorCode implements ErrorCode {
     /**
      * 获取CompletableFuture结果出现异常
      */
-    GET_COMPLETABLE_FUTURE_RESULT_FAILED("GET_COMPLETABLE_FUTURE_RESULT_FAILED", "获取CompletableFuture结果出现异常");
+    GET_COMPLETABLE_FUTURE_RESULT_FAILED("GET_COMPLETABLE_FUTURE_RESULT_FAILED", "获取CompletableFuture结果出现异常"),
+
+    /**
+     * 水印创建失败
+     */
+    WATERMARK_CREATION_FAILURE("WATERMARK_CREATION_FAILURE", "水印创建失败"),
+
+    /**
+     * 表格必须是XSSFSheet
+     */
+    TABLE_MUST_BE_AN_XSSF_SHEET("TABLE_MUST_BE_AN_XSSF_SHEET", "表格必须是XSSFSheet");
 
     private String code;
 

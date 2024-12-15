@@ -6,8 +6,8 @@ import cn.hutool.core.lang.Console;
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.json.JSONUtil;
 import com.xazhao.core.constant.Charsets;
-import com.xazhao.core.exception.ServiceErrorCode;
-import com.xazhao.core.exception.ServiceException;
+import com.xazhao.core.exception.BusinessErrorCode;
+import com.xazhao.core.exception.BusinessException;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.http.Header;
@@ -222,7 +222,7 @@ public class HttpClientUtils {
             output.close();
         } catch (IOException e) {
             e.printStackTrace();
-            throw new ServiceException(ServiceErrorCode.DOWNLOAD_FAILED);
+            throw new BusinessException(BusinessErrorCode.DOWNLOAD_FAILED);
         } finally {
             try {
                 if (input != null) {
