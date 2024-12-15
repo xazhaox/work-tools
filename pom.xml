@@ -13,13 +13,14 @@
 
     <!-- 子模块 -->
     <modules>
-        <module>work-core</module>
+        <module>work-common</module>
         <module>work-concurrent-program</module>
         <module>work-table-model</module>
         <module>work-easy-excel</module>
         <module>work-bloom-filter</module>
         <module>work-ai</module>
         <module>work-cache</module>
+        <module>work-dubbo</module>
     </modules>
 
     <properties>
@@ -46,6 +47,9 @@
         <!-- nacos -->
         <nacos.version>2.3.2</nacos.version>
 
+        <!-- RPC框架 -->
+        <dubbo.version>3.2.10</dubbo.version>
+
         <!-- 安全框架，包含spring security -->
         <spring-security.version>${spring-boot.version}</spring-security.version>
         <jwt.version>0.9.1</jwt.version>
@@ -55,8 +59,6 @@
         <redis.version>${spring-boot.version}</redis.version>
         <redisson.version>3.24.3</redisson.version>
         <commons-pool2.version>2.11.1</commons-pool2.version>
-
-        <!-- 服务监控 -->
 
         <!-- 持久层 -->
         <mysql-connector.version>8.0.33</mysql-connector.version>
@@ -94,9 +96,11 @@
 
         <!-- maven插件相关 -->
         <maven-compiler-plugin.version>3.13.0</maven-compiler-plugin.version>
-        <mapstruct.version>1.5.5.Final</mapstruct.version>
+        <mapstruct-processor.version>1.5.5.Final</mapstruct-processor.version>
         <flatten-maven-plugin.version>1.6.0</flatten-maven-plugin.version>
         <maven-resources-plugin.version>3.1.0</maven-resources-plugin.version>
+        <!-- 构建Jar -->
+        <maven-jar-plugin.version>3.4.2</maven-jar-plugin.version>
     </properties>
 
     <dependencyManagement>
@@ -128,6 +132,19 @@
                 <scope>import</scope>
             </dependency>
 
+            <!-- seata -->
+            <dependency>
+                <groupId>io.seata</groupId>
+                <artifactId>seata-spring-boot-starter</artifactId>
+                <version>${seata.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>com.alibaba</groupId>
+                        <artifactId>druid</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+
             <!-- nacos -->
             <dependency>
                 <groupId>com.alibaba.nacos</groupId>
@@ -141,17 +158,18 @@
                 </exclusions>
             </dependency>
 
-            <!-- seata -->
+            <!-- Dubbo -->
             <dependency>
-                <groupId>io.seata</groupId>
-                <artifactId>seata-spring-boot-starter</artifactId>
-                <version>${seata.version}</version>
-                <exclusions>
-                    <exclusion>
-                        <groupId>com.alibaba</groupId>
-                        <artifactId>druid</artifactId>
-                    </exclusion>
-                </exclusions>
+                <groupId>org.apache.dubbo</groupId>
+                <artifactId>dubbo-spring-boot-starter</artifactId>
+                <version>${dubbo.version}</version>
+            </dependency>
+
+            <!-- Dubbo使用nacos作为注册中心 -->
+            <dependency>
+                <groupId>org.apache.dubbo</groupId>
+                <artifactId>dubbo-registry-nacos</artifactId>
+                <version>${dubbo.version}</version>
             </dependency>
 
             <!-- web -->
@@ -387,13 +405,97 @@
                 <artifactId>work-core</artifactId>
                 <version>${revision}</version>
             </dependency>
+
+            <!-- RPC -->
+            <dependency>
+                <groupId>com.xazhao</groupId>
+                <artifactId>work-rpc</artifactId>
+                <version>${revision}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
-    <!-- maven插件 -->
+    <!-- maven插件管理 -->
     <build>
-        <finalName>${project.name}</finalName>
         <plugins>
+            <!-- 编译插件 -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>${maven-compiler-plugin.version}</version>
+                <configuration>
+                    <source>${java.version}</source>
+                    <target>${java.version}</target>
+                    <!-- 指定注解处理器的路径 -->
+                    <annotationProcessorPaths>
+                        <path>
+                            <groupId>org.projectlombok</groupId>
+                            <artifactId>lombok</artifactId>
+                            <version>${lombok.version}</version>
+                        </path>
+                        <path>
+                            <groupId>org.mapstruct</groupId>
+                            <artifactId>mapstruct-processor</artifactId>
+                            <version>${mapstruct-processor.version}</version>
+                        </path>
+                    </annotationProcessorPaths>
+                </configuration>
+            </plugin>
+
+            <!-- 拷贝资源文件 -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-resources-plugin</artifactId>
+                <version>${maven-resources-plugin.version}</version>
+                <configuration>
+                    <encoding>${project.build.sourceEncoding}</encoding>
+                    <!-- 指定哪些文件类型不会进行资源过滤 -->
+                    <nonFilteredFileExtensions>
+                        <nonFilteredFileExtension>p12</nonFilteredFileExtension>
+                        <nonFilteredFileExtension>pem</nonFilteredFileExtension>
+                    </nonFilteredFileExtensions>
+                </configuration>
+            </plugin>
+
+            <!-- 构建Spring Boot应用 -->
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <version>${spring-boot.version}</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <!-- 将构建好的JAR包重新打包为一个可执行的JAR包，包含Spring Boot应用所需要的所有依赖 -->
+                            <goal>repackage</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <!-- 构建Jar -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>${maven-jar-plugin.version}</version>
+                <configuration>
+                    <archive>
+                        <index>true</index>
+                        <manifest>
+                            <addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
+                        </manifest>
+                        <!-- MANIFEST.MF 额外扩展信息 -->
+                        <manifestEntries>
+                            <Build-OS>${os.name}</Build-OS>
+                            <Built-By>Zhao.An</Built-By>
+                            <Build-Jdk>${java.version}</Build-Jdk>
+                            <Build-Timestamp>${maven.build.timestamp}</Build-Timestamp>
+                            <Automatic-Module-Name>${groupId}</Automatic-Module-Name>
+                            <url>https://github.com/xazhaox/work-tools</url>
+                        </manifestEntries>
+                    </archive>
+                </configuration>
+            </plugin>
+
             <!-- 统一 whisper 项目版本 -->
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
@@ -420,73 +522,10 @@
                     </execution>
                 </executions>
             </plugin>
-
-            <!-- 编译插件 -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>${maven-compiler-plugin.version}</version>
-                <configuration>
-                    <source>${java.version}</source>
-                    <target>${java.version}</target>
-                    <encoding>${project.build.sourceEncoding}</encoding>
-                    <parameters>true</parameters>
-                    <annotationProcessorPaths>
-                        <path>
-                            <groupId>org.springframework.boot</groupId>
-                            <artifactId>spring-boot-configuration-processor</artifactId>
-                            <version>${spring-boot.version}</version>
-                        </path>
-                        <path>
-                            <groupId>org.projectlombok</groupId>
-                            <artifactId>lombok</artifactId>
-                            <version>${lombok.version}</version>
-                        </path>
-                        <path>
-                            <groupId>org.mapstruct</groupId>
-                            <artifactId>mapstruct-processor</artifactId>
-                            <version>${mapstruct.version}</version>
-                        </path>
-                    </annotationProcessorPaths>
-                    <debug>false</debug>
-                    <!-- 编译参数写在arg中，解决Spring Boot 3.2的Parameter Name Discovery问题 -->
-                    <compilerArgs>
-                        <arg>-parameters</arg>
-                    </compilerArgs>
-                </configuration>
-            </plugin>
-
-            <!-- 打包 -->
-            <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-                <version>${spring-boot.version}</version>
-                <executions>
-                    <execution>
-                        <goals>
-                            <!-- 将引入的 jar 打入其中 -->
-                            <goal>repackage</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-
-            <!-- 拷贝资源文件 -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-resources-plugin</artifactId>
-                <version>${maven-resources-plugin.version}</version>
-                <configuration>
-                    <encoding>${project.build.sourceEncoding}</encoding>
-                    <nonFilteredFileExtensions>
-                        <nonFilteredFileExtension>p12</nonFilteredFileExtension>
-                        <nonFilteredFileExtension>pem</nonFilteredFileExtension>
-                    </nonFilteredFileExtensions>
-                </configuration>
-            </plugin>
         </plugins>
 
         <resources>
+            <!-- 将该目录下的所有文件复制到target中 -->
             <resource>
                 <directory>src/main/resources</directory>
                 <includes>
@@ -501,14 +540,12 @@
     <repositories>
         <!-- aliyun -->
         <repository>
-            <id>central</id>
-            <url>https://maven.aliyun.com/repository/central</url>
+            <id>public</id>
+            <name>aliyun nexus</name>
+            <url>https://maven.aliyun.com/repository/public</url>
             <releases>
                 <enabled>true</enabled>
             </releases>
-            <snapshots>
-                <enabled>true</enabled>
-            </snapshots>
         </repository>
 
         <!-- huawei -->
@@ -529,7 +566,20 @@
         </repository>
     </repositories>
 
+    <!-- 配置插件仓库 -->
     <pluginRepositories>
+        <pluginRepository>
+            <id>public</id>
+            <name>aliyun nexus</name>
+            <url>https://maven.aliyun.com/repository/public</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </pluginRepository>
+
         <pluginRepository>
             <id>spring-milestones</id>
             <name>Spring Milestones</name>
